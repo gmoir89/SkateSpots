@@ -10,26 +10,42 @@ import Profile from './Profile';
 const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
-  const [savedPhotoUris, setSavedPhotoUris] = useState([]);
+  const [savedPhotoData, setSavedPhotoData] = useState([]);
 
   useEffect(() => {
     const fetchPhotos = async () => {
       const photosJson = await AsyncStorage.getItem('savedPhotos');
       if (photosJson) {
         const photos = JSON.parse(photosJson);
-        console.log('Fetched photos from AsyncStorage:', photos); // Add this log
-        setSavedPhotoUris(photos);
+        console.log('Fetched photos from AsyncStorage:', photos);
+        setSavedPhotoData(photos);
       }
     };
-  
+
     fetchPhotos();
   }, []);
 
-  const handlePictureTaken = async (uri) => {
-    const updatedPhotoUris = [...savedPhotoUris, uri];
-    console.log('Updated photo URIs:', updatedPhotoUris); // Add this log
-    setSavedPhotoUris(updatedPhotoUris);
-    await AsyncStorage.setItem('savedPhotos', JSON.stringify(updatedPhotoUris));
+  const handlePictureTaken = async ({ fileUri, location }) => {
+    const updatedPhotoData = [...savedPhotoData, { fileUri, location, description: '' }];
+    setSavedPhotoData(updatedPhotoData);
+    await AsyncStorage.setItem('savedPhotos', JSON.stringify(updatedPhotoData));
+  };
+
+  const handleDelete = async (fileUri) => {
+    const updatedPhotoData = savedPhotoData.filter(photo => photo.fileUri !== fileUri);
+    setSavedPhotoData(updatedPhotoData);
+    await AsyncStorage.setItem('savedPhotos', JSON.stringify(updatedPhotoData));
+  };
+
+  const handleUpdate = async (fileUri, newDescription) => {
+    const updatedPhotoData = savedPhotoData.map(photo => {
+      if (photo.fileUri === fileUri) {
+        return { ...photo, description: newDescription };
+      }
+      return photo;
+    });
+    setSavedPhotoData(updatedPhotoData);
+    await AsyncStorage.setItem('savedPhotos', JSON.stringify(updatedPhotoData));
   };
 
   return (
@@ -53,7 +69,6 @@ export default function App() {
             tabBarLabel: 'Home',
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={26} />,
           }}>
-          {/* Use children prop instead of component for Feed */}
           {() => <Feed onPictureTaken={handlePictureTaken} />}
         </Tab.Screen>
         <Tab.Screen
@@ -62,8 +77,7 @@ export default function App() {
             tabBarLabel: 'Updates',
             tabBarIcon: ({ color }) => <MaterialCommunityIcons name="bell" color={color} size={26} />,
           }}>
-          {/* Use children prop instead of component for Notifications */}
-          {() => <Notifications savedPhotoUris={savedPhotoUris} />}
+          {() => <Notifications savedPhotoUris={savedPhotoData} onDelete={handleDelete} onUpdate={handleUpdate} />}
         </Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>

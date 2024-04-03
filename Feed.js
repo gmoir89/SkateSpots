@@ -2,14 +2,16 @@ import React, { useState, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
+import * as Location from 'expo-location';
 
 function Feed({ onPictureTaken }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [locationPermission, requestLocationPermission] = Location.useForegroundPermissions();
   const cameraRef = useRef(null);
 
   const takePicture = async () => {
-    if (cameraRef.current) {
+    if (cameraRef.current && locationPermission.granted) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
         if (!photo) {
@@ -18,38 +20,45 @@ function Feed({ onPictureTaken }) {
         }
         console.log('Photo taken:', photo.uri);
 
-        // Use a timestamp to ensure the filename is unique
+        const location = await Location.getCurrentPositionAsync({});
+        console.log('Location data:', location);
+
         const filename = `photo_${Date.now()}.jpg`;
         const fileUri = FileSystem.documentDirectory + filename;
 
-        // Save the photo to the device's file system
         await FileSystem.copyAsync({
           from: photo.uri,
           to: fileUri,
         });
         console.log('Photo saved to:', fileUri);
 
-        // Pass the saved photo URI to the parent component
-        onPictureTaken(fileUri);
+        onPictureTaken({ fileUri, location });
       } catch (error) {
-        console.error('Error taking picture:', error);
+        console.error('Error taking picture or fetching location:', error);
       }
     } else {
-      console.error('Camera ref is null');
+      console.error('Camera ref is null or location permission is not granted');
     }
   };
 
-  if (!permission) {
-    // Camera permissions are still loading
+  if (!permission || !locationPermission) {
     return <View />;
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="Grant Permission" />
+      </View>
+    );
+  }
+
+  if (!locationPermission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to access your location</Text>
+        <Button onPress={requestLocationPermission} title="Grant Location Permission" />
       </View>
     );
   }
@@ -77,7 +86,7 @@ function Feed({ onPictureTaken }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end', // Align content at the bottom
+    justifyContent: 'flex-end',
   },
   camera: {
     flex: 1,
