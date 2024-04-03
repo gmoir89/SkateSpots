@@ -1,10 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Image } from 'react-native';
 
 function Profile() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
+      <Image
+        source={require('./assets/skatespots.png')}
+        style={{ width: 200, height: 200 }} // Set the width and height as needed
+        resizeMode="contain" // This makes sure the whole image fits into the designated space
+      />
     </View>
   );
 }
