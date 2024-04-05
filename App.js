@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image } from 'react-native'; // Import Image component
 import Feed from './Feed';
 import Notifications from './Notifications';
 import Profile from './Profile';
+// Import images
+import homeIcon from './assets/home.png';
+import cameraIcon from './assets/camera.png';
+import locationIcon from './assets/location.png';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -59,23 +63,23 @@ export default function App() {
           name="Profile"
           component={Profile}
           options={{
-            tabBarLabel: 'Profile',
-            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" color={color} size={26} />,
+            tabBarLabel: 'HOME', // Remove text label
+            tabBarIcon: () => <Image source={homeIcon} style={{width: 26, height: 26}} />,
           }}
         />
         <Tab.Screen
           name="Feed"
           options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={26} />,
+            tabBarLabel: 'CAMERA', // Remove text label
+            tabBarIcon: () => <Image source={cameraIcon} style={{width: 26, height: 26}} />,
           }}>
           {() => <Feed onPictureTaken={handlePictureTaken} />}
         </Tab.Screen>
         <Tab.Screen
           name="Notifications"
           options={{
-            tabBarLabel: 'Updates',
-            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="bell" color={color} size={26} />,
+            tabBarLabel: 'SPOTS', // Remove text label
+            tabBarIcon: () => <Image source={locationIcon} style={{width: 26, height: 26}} />,
           }}>
           {() => <Notifications savedPhotoUris={savedPhotoData} onDelete={handleDelete} onUpdate={handleUpdate} />}
         </Tab.Screen>
