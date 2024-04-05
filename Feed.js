@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
+import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons for the camera icons
 
 function Feed({ onPictureTaken }) {
   const [type, setType] = useState(CameraType.back);
@@ -72,10 +73,10 @@ function Feed({ onPictureTaken }) {
       <Camera style={styles.camera} type={type} ref={cameraRef}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
+            <MaterialIcons name="flip-camera-ios" size={24} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={takePicture}>
-            <Text style={styles.text}>Take Picture</Text>
+            <MaterialIcons name="camera" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </Camera>
@@ -99,15 +100,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    padding: 10,
+    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 5,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
   },
 });
 
