@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons for the camera icons
+import * as Haptics from 'expo-haptics'; // Import Haptics for camera button feedback
 
 function Feed({ onPictureTaken }) {
   const [type, setType] = useState(CameraType.back);
@@ -19,6 +20,7 @@ function Feed({ onPictureTaken }) {
           console.error('Photo is null or undefined');
           return;
         }
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); // Provide haptic feedback
         console.log('Photo taken:', photo.uri);
 
         const location = await Location.getCurrentPositionAsync({});
@@ -70,8 +72,9 @@ function Feed({ onPictureTaken }) {
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type} ref={cameraRef}>
+      <Camera style={styles.camera} type={type} ref={cameraRef} onCameraReady={setupPinchToZoom}>
         <View style={styles.buttonContainer}>
+          {/* Move buttons to the bottom */}
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
             <MaterialIcons name="flip-camera-ios" size={24} color="white" />
           </TouchableOpacity>
@@ -82,6 +85,10 @@ function Feed({ onPictureTaken }) {
       </Camera>
     </View>
   );
+
+  function setupPinchToZoom() {
+
+  }
 }
 
 const styles = StyleSheet.create({
@@ -96,7 +103,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginBottom: 20,
+    marginTop: 'auto', // Adjusted to move to the bottom
+    padding: 20, // Add some padding at the bottom
   },
   button: {
     marginHorizontal: 20,
