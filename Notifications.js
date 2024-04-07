@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Linking, // Import Linking from 'react-native'
 } from 'react-native';
 
 function Notifications({ savedPhotoUris, onDelete, onUpdate }) {
@@ -17,8 +18,14 @@ function Notifications({ savedPhotoUris, onDelete, onUpdate }) {
 
   const renderLocation = (location) => {
     if (location && location.coords) {
+      const latitude = location.coords.latitude.toFixed(3);
+      const longitude = location.coords.longitude.toFixed(3);
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+
       return (
-        <Text style={{ color: 'black' }}>Lat: {location.coords.latitude.toFixed(3)}, Lon: {location.coords.longitude.toFixed(3)}</Text>
+        <TouchableOpacity onPress={() => Linking.openURL(googleMapsUrl)}>
+          <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>Lat: {latitude}, Lon: {longitude}</Text>
+        </TouchableOpacity>
       );
     }
     return <Text style={{ color: 'black' }}>No location data</Text>;
@@ -100,7 +107,7 @@ function Notifications({ savedPhotoUris, onDelete, onUpdate }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF', // Reverted to original background color
+    backgroundColor: '#FFFFFF',
     paddingBottom: 20,
   },
   imageContainer: {
@@ -111,17 +118,17 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginTop: 20,
-    borderRadius: 10, // Rounded corners for images
+    borderRadius: 10,
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: 'rgba(0,0,0,0.5)', // Adds a semi-transparent overlay
+    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent overlay outside the modal
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#333",
+    backgroundColor: "#666", // Lightened the modal background for better readability
     borderRadius: 10,
     padding: 25,
     alignItems: "center",
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#555",
     borderRadius: 6,
-    backgroundColor: "#222",
+    backgroundColor: "#222", // Consider lightening this if needed
     color: 'white',
     width: '100%',
   },
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: "#666",
+    backgroundColor: "#666", // Consistent with the modal's background for aesthetics
     padding: 10,
     borderRadius: 5,
     marginHorizontal: 5,
@@ -169,5 +176,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 export default Notifications;

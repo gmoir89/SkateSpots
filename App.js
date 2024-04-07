@@ -2,19 +2,25 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { Image } from 'react-native'; // Import Image component
+import { Image } from 'react-native';
 import Feed from './Feed';
 import Notifications from './Notifications';
 import Profile from './Profile';
-// Import images
 import homeIcon from './assets/home.png';
 import cameraIcon from './assets/camera.png';
 import locationIcon from './assets/location.png';
 
 const Tab = createMaterialBottomTabNavigator();
 
+const tabBarColors = {
+  Profile: '#FF6347', // Tomato
+  Feed: '#4682B4', // SteelBlue
+  Notifications: '#32CD32', // LimeGreen
+};
+
 export default function App() {
   const [savedPhotoData, setSavedPhotoData] = useState([]);
+  const [activeTabColor, setActiveTabColor] = useState(tabBarColors.Profile); // Initial tab bar color
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -53,36 +59,43 @@ export default function App() {
   };
 
   return (
-    <NavigationContainer>
+    <NavigationContainer onStateChange={(state) => {
+      const routeName = state.routes[state.index].name;
+      setActiveTabColor(tabBarColors[routeName]);
+    }}>
       <Tab.Navigator
         initialRouteName="Profile"
-        activeColor="#e91e63"
-        labelStyle={{ fontSize: 12 }}
-        style={{ backgroundColor: 'tomato' }}>
+        activeColor="#000000" // Icons and text color in active state
+        inactiveColor="#000000" // Icons and text color in inactive state
+        barStyle={{ backgroundColor: activeTabColor }} // Dynamic background color based on the active tab
+      >
         <Tab.Screen
           name="Profile"
           component={Profile}
           options={{
-            tabBarLabel: 'HOME', // Remove text label
-            tabBarIcon: () => <Image source={homeIcon} style={{width: 26, height: 26}} />,
+            tabBarIcon: ({ color }) => (
+              <Image source={homeIcon} style={{ width: 26, height: 26, tintColor: color }} />
+            ),
           }}
         />
         <Tab.Screen
           name="Feed"
+          children={() => <Feed onPictureTaken={handlePictureTaken} />}
           options={{
-            tabBarLabel: 'CAMERA', // Remove text label
-            tabBarIcon: () => <Image source={cameraIcon} style={{width: 26, height: 26}} />,
-          }}>
-          {() => <Feed onPictureTaken={handlePictureTaken} />}
-        </Tab.Screen>
+            tabBarIcon: ({ color }) => (
+              <Image source={cameraIcon} style={{ width: 26, height: 26, tintColor: color }} />
+            ),
+          }}
+        />
         <Tab.Screen
           name="Notifications"
+          children={() => <Notifications savedPhotoUris={savedPhotoData} onDelete={handleDelete} onUpdate={handleUpdate} />}
           options={{
-            tabBarLabel: 'SPOTS', // Remove text label
-            tabBarIcon: () => <Image source={locationIcon} style={{width: 26, height: 26}} />,
-          }}>
-          {() => <Notifications savedPhotoUris={savedPhotoData} onDelete={handleDelete} onUpdate={handleUpdate} />}
-        </Tab.Screen>
+            tabBarIcon: ({ color }) => (
+              <Image source={locationIcon} style={{ width: 26, height: 26, tintColor: color }} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

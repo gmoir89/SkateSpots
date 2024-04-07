@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
-import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons for the camera icons
-import * as Haptics from 'expo-haptics'; // Import Haptics for camera button feedback
+import { MaterialIcons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 
 function Feed({ onPictureTaken }) {
   const [type, setType] = useState(CameraType.back);
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    marginTop: 'auto', // Adjusted to move to the bottom
-    padding: 20, // Add some padding at the bottom
+    marginTop: 'auto',
+    padding: 20,
   },
   button: {
     marginHorizontal: 20,
