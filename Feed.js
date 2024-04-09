@@ -20,7 +20,7 @@ function Feed({ onPictureTaken }) {
           console.error('Photo is null or undefined');
           return;
         }
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); // Provide haptic feedback
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); // makes the phone buzz
         console.log('Photo taken:', photo.uri);
 
         const location = await Location.getCurrentPositionAsync({});
