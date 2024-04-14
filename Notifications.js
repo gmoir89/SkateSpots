@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  Linking, // Import Linking from 'react-native'
+  Linking,
 } from 'react-native';
 
 function Notifications({ savedPhotoUris, onDelete, onUpdate }) {
@@ -124,11 +124,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent overlay outside the modal
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#666", // Lightened the modal background for better readability
+    backgroundColor: "#666",
     borderRadius: 10,
     padding: 25,
     alignItems: "center",
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: "#666", // Consistent with the modal's background for aesthetics
+    backgroundColor: "#666",
     padding: 10,
     borderRadius: 5,
     marginHorizontal: 5,

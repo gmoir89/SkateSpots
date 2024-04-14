@@ -20,7 +20,7 @@ const tabBarColors = {
 
 export default function App() {
   const [savedPhotoData, setSavedPhotoData] = useState([]);
-  const [activeTabColor, setActiveTabColor] = useState(tabBarColors.Profile); // Initial tab bar color
+  const [activeTabColor, setActiveTabColor] = useState(tabBarColors.Profile);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -65,9 +65,9 @@ export default function App() {
     }}>
       <Tab.Navigator
         initialRouteName="Profile"
-        activeColor="#000000" // Icons and text color in active state
-        inactiveColor="#000000" // Icons and text color in inactive state
-        barStyle={{ backgroundColor: activeTabColor }} // Dynamic background color based on the active tab
+        activeColor="#000000"
+        inactiveColor="#000000"
+        barStyle={{ backgroundColor: activeTabColor }}
       >
         <Tab.Screen
           name="Profile"

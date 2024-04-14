@@ -15,24 +15,23 @@ function Profile() {
   );
 }
 
-// Define styles outside of the component for better performance and readability
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20, // Apply equal padding around the container
+    padding: 20, 
   },
   header: {
-    fontSize: 24, // Adjust font size as needed
-    fontWeight: 'bold', // Make the header bold
-    marginBottom: 20, // Add space below the header
-    textAlign: 'center', // Center the text horizontally
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    textAlign: 'center',
   },
   subheader: {
-    fontSize: 18, // Adjust font size as needed
-    marginTop: 20, // Add space above the subheader
-    textAlign: 'center', // Center the text horizontally
+    fontSize: 18,
+    marginTop: 20,
+    textAlign: 'center',
   },
   image: {
     width: 200,
